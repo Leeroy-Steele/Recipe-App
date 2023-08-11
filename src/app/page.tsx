@@ -11,7 +11,7 @@ import {useAxios} from "@/hooks/useAxios"
 
 export default function Home() {
 
-  const { data, error, isLoading, isValidating } = useSWR(['https://api.spoonacular.com/recipes/complexSearch',"1cdfdd18388841c5b48f2d282e84dc00"],([url, token]) => useAxios(url, token))
+  const { data, error, isLoading, isValidating } = useSWR(['https://api.spoonacular.com/recipes/complexSearch?number=50',"1cdfdd18388841c5b48f2d282e84dc00"],([url, token]) => useAxios(url, token))
  
   return (
     <>
