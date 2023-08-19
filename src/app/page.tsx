@@ -12,12 +12,14 @@ import {useAxios} from "@/hooks/useAxios"
 
 export default function Home() {
 
-  const { data, error, isLoading, isValidating } = useSWR(['https://api.spoonacular.com/recipes/complexSearch?number=50',"1cdfdd18388841c5b48f2d282e84dc00"],([url, token]) => useAxios(url, token))
-  const [ resultsPerPage, setResultsPerPage] = useState(10)
-  
-  // how many items to display
-  let totalItems = 0
-  if(!isLoading){totalItems = data.results.length} 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [resultsPerPage, setResultsPerPage] = useState(20);
+
+  let firstItem = currentPage * resultsPerPage - (resultsPerPage - 1);
+  let lastItem = currentPage * resultsPerPage;
+
+  const { data, error, isLoading, isValidating } = useSWR([`https://api.spoonacular.com/recipes/complexSearch?offset=${firstItem}&number=${400}`,"1cdfdd18388841c5b48f2d282e84dc00"],([url, token]) => useAxios(url, token))
+
 
   return (
     <>
@@ -27,7 +29,7 @@ export default function Home() {
         ImageURL="https://img.freepik.com/free-photo/dark-plate-with-waffles-grapes-dark-background_23-2148340373.jpg"
       />
 
-      {!isLoading&&<Pagenation resultsPerPage={resultsPerPage} totalItems={totalItems} />}
+      {!isLoading&&<Pagenation totalItems={data.results.length} currentPage={currentPage} setCurrentPage={setCurrentPage} resultsPerPage={resultsPerPage} setResultsPerPage={setResultsPerPage} firstItem={firstItem} lastItem={lastItem} />}
 
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
