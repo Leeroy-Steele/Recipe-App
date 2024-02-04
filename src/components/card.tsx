@@ -1,5 +1,5 @@
 "use client";
-
+import PillButtons from "./pillButtons";
 
 
 export default function Card({product}:any) {
@@ -14,7 +14,7 @@ export default function Card({product}:any) {
           />
         </div>
         <h3 className="mt-4 text-sm text-gray-700">{product.title}</h3>
-        
+        <PillButtons/>
       </a>
     </>
   );

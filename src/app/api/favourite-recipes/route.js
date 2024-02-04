@@ -1,34 +1,53 @@
 import { NextResponse } from "next/server";
 import clientPromise from "../../../lib/mongodb";
-
 const client = await clientPromise;
-const db = client.db("RecipeApp");
+const db = client.db("RecipeAppData");
+import { ObjectId } from "bson";
 
-export async function GET() {
-  
-  const dbRequest = await db.collection("favourite_recipes").find({}).toArray();
-  return NextResponse.json({ status: 200, data: dbRequest });
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const userName = searchParams.get("userName");
+
+  const dbRequest = await db
+    .collection("FavouriteRecipes")
+    .find({ userName: userName })
+    .toArray();
+  return NextResponse.json(dbRequest);
 }
 
 export async function POST(request) {
-  // request.json() will get the body 
+  // request.json() will get the body
   const bodyObject = await request.json();
-  const dbRequest = await db.collection("favourite_recipes").insertOne(bodyObject);
-  return NextResponse.json(dbRequest.ops[0]);
+  const dbRequest = await db
+    .collection("FavouriteRecipes")
+    .insertOne(bodyObject);
+
+  return NextResponse.json({
+    isSaved:true,
+    _id:dbRequest.ops[0]._id
+  });
+
 }
 
 export async function DELETE(request) {
-  // request.json() will get the body 
-  const {name} = await request.json();
-  const dbRequest = await db.collection("favourite_recipes").deleteOne({"name":name});
-  return NextResponse.json(dbRequest.result);
-}
+  const { _id } = await request.json();
 
-export async function PATCH(request) {
-  // request.json() will get the body 
-  const {name, difficulty} = await request.json();
-  const dbRequest = await db.collection("favourite_recipes").updateOne({"name":name},{$set:{"difficulty":difficulty}});
-  return NextResponse.json(dbRequest.result);
-}
+  const dbRequest = await db
+    .collection("FavouriteRecipes")
+    .deleteOne({ _id: new ObjectId(_id) });
 
+  if (dbRequest.result.n !== 1) {
+    // Problem
+    return NextResponse.json({
+      isSuccessful: false,
+      recipe_ID: _id,
+    });
+  } else {
+    // Successfull
+    return NextResponse.json({
+      isSuccessful: true,
+      recipe_ID: _id,
+    });
+  }
+}
 

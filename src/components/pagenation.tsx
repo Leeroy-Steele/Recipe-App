@@ -16,7 +16,7 @@ export default function Pagenation({ totalItems, currentPage, setCurrentPage, re
   let resultsPerPageButtonArr = [20,40,60]
 
   useEffect(()=>{
-    setCurrentPage(1);
+    // setCurrentPage(1);
     setTotalpages(totalItems / resultsPerPage)
   },[resultsPerPage])
 
