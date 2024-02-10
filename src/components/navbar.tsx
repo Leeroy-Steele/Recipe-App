@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { MyContext } from "@/context/contextProvider";
 
 // for tailwind
@@ -10,7 +10,9 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 // Navigation buttons on left side of nav bar
 const navigation = [
-  { name: 'Home', href: '/', current: true },
+  { name: 'Home', href: '/', current: false },
+  { name: 'Login', href: '/login', current: false },
+  { name: 'Register', href: '/register', current: false },
   { name: 'Favourite Recipies', href: '/favourite-recipes', current: false }
 ]
 
@@ -21,7 +23,6 @@ function classNames(...classes) {
 export default function Navbar() {
 
   const { userName,updateUserName, userEmail, updateEmail, loggedIn, updateLoggedIn } = useContext(MyContext);
-
 
   return (
 
@@ -55,6 +56,7 @@ export default function Navbar() {
                       <a
                         key={item.name}
                         href={item.href}
+                        onClick={()=>{changeCurrent(item.name)}}
                         className={classNames(
                           item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
@@ -169,12 +171,3 @@ export default function Navbar() {
   );
 }
 
-
-
-
-
-
-{/* <Link href="/">Home</Link>
-<Link href="/login">Login</Link>
-<Link href="/register">Register</Link>
-<Link href="/favourite-recipes">Favourites</Link> */}

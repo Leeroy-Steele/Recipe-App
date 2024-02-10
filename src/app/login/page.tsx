@@ -1,34 +1,71 @@
-"use client"
+"use client";
 
 import { useContext, useState } from "react";
 import { MyContext } from "@/context/contextProvider";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  // for page redirect 
-  const router = useRouter()
+  // for page redirect
+  const router = useRouter();
 
   // for the form
-  const [formEmail, setFormEmail] = useState('')
-  const [formPassword, setFormPassword] = useState('')
+  const [formEmail, setFormEmail] = useState("");
+  const [formPassword, setFormPassword] = useState("");
 
   // for the context
-  const {userName,updateUserName, userEmail, updateEmail, loggedIn, updateLoggedIn} = useContext(MyContext);
+  const {
+    userName,
+    updateUserName,
+    userEmail,
+    updateEmail,
+    loggedIn,
+    updateLoggedIn,
+  } = useContext(MyContext);
 
   // for form submit button
-  const handleSubmit = (e:any)=>{
+  function handleSubmit(e: any) {
     e.preventDefault();
 
-    updateEmail(formEmail)
-    updateLoggedIn(true)
-    router.push('/')
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      email: formEmail,
+      password: formPassword,
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch("/api/login", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        //if logged in 
+        if(result.userName !=null){
+          updateUserName(result.userName);
+          updateLoggedIn(true);
+          router.push('/')
+        }
+        // if email not good
+        else if(!result.isEmailValid){alert("wrong email")}
+        // if password not good
+        else if(!result.isPWValid){alert("wrong password")}
+        else{
+          alert("Sorry, something went wrong")
+        }
+        
+      })
+      .catch((error) => console.log("error", error));
   }
 
-    return (
-      <>
-        My Login Page
-
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+  return (
+    <>
+      My Login Page
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             className="mx-auto h-25 w-auto"
@@ -43,7 +80,10 @@ export default function LoginPage() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
                 Email address
               </label>
               <div className="mt-2">
@@ -54,17 +94,19 @@ export default function LoginPage() {
                   autoComplete="email"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  onChange={(e)=>setFormEmail(e.target.value)}
+                  onChange={(e) => setFormEmail(e.target.value)}
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
                   Password
                 </label>
-
               </div>
               <div className="mt-2">
                 <input
@@ -74,7 +116,7 @@ export default function LoginPage() {
                   autoComplete="current-password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  onChange={(e)=>setFormPassword(e.target.value)}
+                  onChange={(e) => setFormPassword(e.target.value)}
                 />
               </div>
             </div>
@@ -88,12 +130,8 @@ export default function LoginPage() {
               </button>
             </div>
           </form>
-
-
         </div>
       </div>
-    
-      </>
-    )
-  }
-  
+    </>
+  );
+}
