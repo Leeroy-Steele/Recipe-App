@@ -1,16 +1,17 @@
 "use client";
 
 import { useContext, useEffect, useState } from "react";
+import { MyContext } from "@/context/contextProvider";
+import Link from "next/link";
+
 import { recipeCategories } from "@/context/recipeCategories";
 import HeaderSection from "@/components/HeaderSection";
 
-// imports for data fetching
-import useSWR from "swr";
-import { useAxios } from "@/hooks/useAxios";
-
 export default function Home() {
-  console.log(recipeCategories);
-
+  // console.log(recipeCategories);
+  // for the context
+  const { userName } = useContext(MyContext);
+  console.log(userName);
   return (
     <>
       <HeaderSection
@@ -23,7 +24,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-28 lg:gap-y-16">
             {recipeCategories.map((cat: object) => (
               <div className="relative group h-48 flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
-                <a href={`/view-category/${cat.name}`} className="block">
+                <Link href={`/view-category/${cat.name}`} className="block">
                   <div className="h-28">
                     <div className="absolute -top-20 lg:top-[-10%] left-[5%] z-40  group-hover:top-[-40%] group-hover:opacity-[0.9]   duration-300 w-[90%] h-48 bg-red-500 rounded-xl justify-items-center align-middle">
                       <img
@@ -37,12 +38,12 @@ export default function Home() {
                       />
                     </div>
                   </div>
-                  <div className="p-6   z-10 w-full   ">
+                  <div className="p-6 z-10 w-full">
                     <p className="mb-2 inline-block text-tg text-center w-full  text-xl  font-sans  font-semibold leading-snug tracking-normal   antialiased">
                       {cat.name}
                     </p>
                   </div>
-                </a>
+                </Link>
               </div>
             ))}
           </div>
