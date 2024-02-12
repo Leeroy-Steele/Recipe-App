@@ -23,6 +23,7 @@ const fetcher = (url: string, apiKey: string) => {
   let resp = axios
     .request(config)
     .then((response) => {
+      console.log(response)
       return response.data;
     })
     .catch((error) => {

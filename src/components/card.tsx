@@ -2,7 +2,10 @@
 import PillButtons from "./pillButtons";
 import Link from "next/link";
 
-export default function Card({ product }: any) {
+export default function Card({ product, reload }: any) {
+
+
+
   return (
     <div className="group">
       <Link href={`/view-recipe/${product.id}`}>
