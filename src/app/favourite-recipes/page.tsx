@@ -23,7 +23,6 @@ export default function FavouriteRecipesPage() {
   const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
-    console.log(`/api/favourite-recipes?userName=${userName}`);
     fetch(`/api/favourite-recipes?userName=${userName}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
