@@ -1,10 +1,17 @@
 "use client";
-
+import backgroundImage from "../../public/images/1.jpg"
 
 export default function HeaderSection({title,smallText}) {
   return (
     <>
-      <div className="relative isolate overflow-hidden bg-yellow-700 py-24 sm:py-32">
+      <div 
+        style={{ 
+          backgroundImage: `url(${backgroundImage.src})`,
+          width: '100%',
+          // height: '50%',
+      }}
+        className="relative isolate overflow-hidden py-24 sm:py-32"
+      >
 
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:mx-0">

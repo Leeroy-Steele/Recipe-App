@@ -34,12 +34,23 @@ export default function FavouriteRecipesPage() {
 
   return (
     <>
-      <h4>My Favourite Recipes Page</h4>
+      <div className="mx-auto max-w-7xl py-6 lg:px-8">
+        
+          <h2 className="text-4xl font-bold tracking-tight sm:text-6xl text-center">
+            My Favourite Recipes
+          </h2>
+          <p className="mt-6 text-lg leading-8 text-gray-500 text-center">
+            View or remove your favourite recipes here. Or why not create your own?
+          </p>
+        
+      </div>
+
       <hr></hr>
-      <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+      <br></br>
+      <div className="p-4 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
         {recipes &&
           recipes.map((recipe) => (
-            <Card key={recipe.id} product={recipe} ></Card>
+            <Card key={recipe.id} product={recipe}></Card>
           ))}
       </div>
     </>

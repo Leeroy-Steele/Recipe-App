@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import pillButtons from "@/components/pillButtons";
 
 // imports for data fetching
-import { useAxios } from "@/hooks/useAxios";
 import useSWR from "swr";
 import axios from "axios";
 
@@ -61,6 +60,7 @@ export default function Page({ params }: { params: { productID: number } }) {
             </dd>
 
             <img style={{margin:"auto",borderRadius:"50px"}} src={data.image} width={"800"} />
+ 
           </div>
           <div className="mt-6 border-t border-gray-100">
             <dl className="divide-y divide-gray-100">
