@@ -70,6 +70,7 @@ export default function pillButtons({ name, recipe }) {
 
   return (
     <div>
+
       {buttonType === "Delete" ? (
         <button
           type="button"

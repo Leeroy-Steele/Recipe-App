@@ -7,6 +7,7 @@ import Card from "@/components/card";
 import Pagenation from "@/components/pagenation";
 import useSWR from "swr";
 import axios from "axios";
+import { recipeCategories } from "@/context/recipeCategories"
 
 // fetcher for swr
 const fetcher = (url: string, apiKey: string) => {
@@ -33,68 +34,25 @@ const fetcher = (url: string, apiKey: string) => {
 export default function Home({ params }: { params: { category: string } }) {
   // for the context
   const {
-    userName,
-    updateUserName,
-    userEmail,
-    updateEmail,
-    loggedIn,
-    updateLoggedIn,
+    userName
   } = useContext(MyContext);
+
+  const [category, setCategory] = useState(params.category)
 
   // get recipes from spoonacular
   const { data, error, isLoading } = useSWR(
     [
       `https://api.spoonacular.com/recipes/complexSearch?offset=${1}&number=${100}&cuisine=${
-        params.category
+        category
       }`,
       "1cdfdd18388841c5b48f2d282e84dc00",
     ],
     ([url, apiKey]) => fetcher(url, apiKey)
   );
 
-  // fetch favourite recipes
-  const [myRecipes, setMyRecipes] = useState([]);
-
-  useEffect(() => {
-    const requestOptions = {
-      method: "GET",
-      redirect: "follow",
-    };
-
-    fetch(`/api/favourite-recipes?userName=${userName}`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        setMyRecipes(result);
-      })
-      .then(() => {
-        // map through each user recipe to find match with spoonacular recipes (data)
-        myRecipes.forEach((myRecipe)=>{
-          
-          // console.log(myRecipe)
-          let myRecipeId = myRecipe.id
-
-          // tag my favourites
-          data.results.forEach((categoryRecipe)=>{
-            let categoryRecipeID = categoryRecipe.id
-            if(categoryRecipeID===myRecipeId){
-              // add isFavourite = true
-              categoryRecipe.isFavourite = true
-              categoryRecipe._id = myRecipe._id
-            }
-          })
-        })
-
-        // tag non favourites with isFavourite = false
-        data.results.forEach((categoryRecipe)=>{
-          if(categoryRecipe.isFavourite!==true){
-            // add isFavourite = true
-            categoryRecipe.isFavourite = false
-          }
-        })
-      })
-      .catch((error) => console.log("error", error));
-
-  }, [data, isLoading]);
+  const handleSetCategory = (category:string)=>{
+    setCategory(category)
+  }
 
   return (
     <>
@@ -111,6 +69,19 @@ export default function Home({ params }: { params: { category: string } }) {
           lastItem={lastItem}
         />
       )} */}
+
+      <div className="m-3">
+      {recipeCategories.map((category)=>
+        // <div>{category.name}</div>
+        <button
+        type="button"
+        onClick={() => handleSetCategory(category.name)}
+        className="text-black bg-white font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-grey-300 dark:hover:bg-grey-300  dark:focus:ring-blue-800"
+      >
+        {category.name}
+      </button>
+      )}
+      </div>
 
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
