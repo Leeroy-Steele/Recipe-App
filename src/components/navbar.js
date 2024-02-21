@@ -24,26 +24,22 @@ export default function Navbar() {
 
   // Navigation buttons on left side of nav bar
   const [navigation, setNavigation] = useState([
-    { name: "Home", href: "/", current: false },
-    { name: "Login", href: "/login", current: false },
-    { name: "Register", href: "/register", current: false },
-    { name: "Favourite Recipies", href: "/favourite-recipes", current: false },
+    // { name: "Categories", href: "/", current: false },
+    // { name: "Login", href: "/login", current: false },
+    // { name: "Register", href: "/register", current: false },
+    // { name: "Favourite Recipies", href: "/favourite-recipes", current: false },
   ]);
 
   useEffect(() => {
     if (loggedIn) {
       setNavigation([
-        { name: "Home", href: "/", current: false },
+        { name: "Categories", href: "/", current: false },
         { name: "Asian Category", href: "/view-category/Asian", current: false },
-        {
-          name: "Favourite Recipies",
-          href: "/favourite-recipes",
-          current: false,
-        },
+        { name: "Favourite Recipies", href: "/favourite-recipes",current: false,},
       ]);
     } else {
       setNavigation([
-        { name: "Home", href: "/", current: false },
+        { name: "Categories", href: "/", current: false },
         { name: "Asian Category", href: "/view-category/Asian", current: false },
         { name: "Login", href: "/login", current: false },
         { name: "Register", href: "/register", current: false },

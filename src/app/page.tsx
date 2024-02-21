@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <>
       <HeaderSection
-        title="Lee's Recipe App"
-        smallText="Its going to be pretty good"
+        title="Categories"
+        smallText="Choose one and get cooking!"
       />
 
       <section className="bg-white  py-24 px-4 lg:px-16">

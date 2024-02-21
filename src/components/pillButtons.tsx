@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { MyContext } from "@/context/contextProvider";
 
 
-export default function pillButtons({ name, recipe }) {
+export default function pillButtons({ name, recipe }:{name:string, recipe:object}) {
   // for the context
   const {
     userName
@@ -14,12 +14,12 @@ export default function pillButtons({ name, recipe }) {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  var raw = JSON.stringify({
-    _id: recipe._id,
-  });
-
   const handleRemoveFavourite = () => {
-    var requestOptions = {
+    const raw = JSON.stringify({
+      _id: recipe._id,
+    });
+
+    const requestOptions = {
       method: "DELETE",
       headers: myHeaders,
       body: raw,

@@ -23,6 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/api/userCrud/route.js", "src/lib/mongodb.js", "src/context/contextProvider.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/api/userCrud/route.js", "src/lib/mongodb.js", "src/context/contextProvider.jsx", "src/components/navbar.js", "src/app/view-recipe/[productID]/page.js"],
   "exclude": ["node_modules"]
 }

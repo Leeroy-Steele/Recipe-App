@@ -7,7 +7,7 @@ import Card from "@/components/card";
 import Pagenation from "@/components/pagenation";
 import useSWR from "swr";
 import axios from "axios";
-import { recipeCategories } from "@/context/recipeCategories"
+import { recipeCategories } from "@/context/recipeCategories";
 
 // fetcher for swr
 const fetcher = (url: string, apiKey: string) => {
@@ -33,30 +33,26 @@ const fetcher = (url: string, apiKey: string) => {
 
 export default function Home({ params }: { params: { category: string } }) {
   // for the context
-  const {
-    userName
-  } = useContext(MyContext);
+  const { userName } = useContext(MyContext);
 
-  const [category, setCategory] = useState(params.category)
+  const [category, setCategory] = useState(params.category);
 
   // get recipes from spoonacular
   const { data, error, isLoading } = useSWR(
     [
-      `https://api.spoonacular.com/recipes/complexSearch?offset=${1}&number=${100}&cuisine=${
-        category
-      }`,
+      `https://api.spoonacular.com/recipes/complexSearch?offset=${1}&number=${100}&cuisine=${category}`,
       "1cdfdd18388841c5b48f2d282e84dc00",
     ],
     ([url, apiKey]) => fetcher(url, apiKey)
   );
 
-  const handleSetCategory = (category:string)=>{
-    setCategory(category)
-  }
+  const handleSetCategory = (category: string) => {
+    setCategory(category);
+  };
 
   return (
     <>
-      <HeaderSection title={`${params.category} Recipes`} smallText="" />
+      <HeaderSection title={`${category} Recipes`} smallText="" />
 
       {/* {!isLoading && (
         <Pagenation
@@ -71,16 +67,16 @@ export default function Home({ params }: { params: { category: string } }) {
       )} */}
 
       <div className="m-3">
-      {recipeCategories.map((category)=>
-        // <div>{category.name}</div>
-        <button
-        type="button"
-        onClick={() => handleSetCategory(category.name)}
-        className="text-black bg-white font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-grey-300 dark:hover:bg-grey-300  dark:focus:ring-blue-800"
-      >
-        {category.name}
-      </button>
-      )}
+        {recipeCategories.map((category) => (
+          // <div>{category.name}</div>
+          <button
+            type="button"
+            onClick={() => handleSetCategory(category.name)}
+            className="text-black bg-white font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-grey-300 dark:hover:bg-grey-300  dark:focus:ring-blue-800"
+          >
+            {category.name}
+          </button>
+        ))}
       </div>
 
       <div className="bg-white">
