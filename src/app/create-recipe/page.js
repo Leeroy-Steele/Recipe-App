@@ -1,8 +1,8 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
 import PillButtons from "@/components/pillButtons";
-
 import { MyContext } from "@/context/contextProvider";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }) {
   // for the context
@@ -24,12 +24,73 @@ export default function Page({ params }) {
   const [recipePricePerServing, setRecipePricePerServing] = useState(0);
   const [ingredients, setIngredients] = useState([]);
 
+    // for page redirect
+    const router = useRouter();
+
   // for when submitting the form
-  const handleSubmit = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    //console.log the form
+    console.log({
+      recipeID: recipeID,
+      recipeTitle: recipeTitle,
+      imageURL: imageURL,
+      recipeSummary: recipeSummary,
+      readyInMinutes: readyInMinutes,
+      servings: servings,
+      instructions: instructions,
+      recipeIsVegetarian: recipeIsVegetarian,
+      recipeIsVegan: recipeIsVegan,
+      recipeIsGlutenFree: recipeIsGlutenFree,
+      recipeIsDairyFree: recipeIsDairyFree,
+      recipePricePerServing: recipePricePerServing,
+      ingredients: ingredients,
+    });
+
+    //create json for post request
+    const raw = JSON.stringify({
+      id: recipeID,
+      userName: userName,
+      isFavourite: true,
+      title: recipeTitle,
+      image: imageURL,
+      Summary: recipeSummary,
+      readyInMinutes: readyInMinutes,
+      servings: servings,
+      sourceUrl: "user created",
+      instructions: instructions,
+      vegetarian: recipeIsVegetarian,
+      vegan: recipeIsVegan,
+      glutenFree: recipeIsGlutenFree,
+      dairyFree: recipeIsDairyFree,
+      pricePerServing: recipePricePerServing,
+      Ingredients: ingredients,
+    });
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    
+    //post recipe to backend
+    fetch("/api/favourite-recipes", requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+        //redirect to my recipes
+        router.push('/favourite-recipes')
+      })
+      .catch((error) => console.log("error", error));
+
+  };
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        
         {/* Top image */}
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
@@ -50,7 +111,7 @@ export default function Page({ params }) {
                 htmlFor="recipeTitle"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Recipe Title
+                Recipe Title *
               </label>
               <div className="mt-2">
                 <input
@@ -78,8 +139,8 @@ export default function Page({ params }) {
                   id="imageURL"
                   name="imageURL"
                   type="imageURL"
+                  placeholder="https://imageURL.com"
                   autoComplete="imageURL"
-                  required
                   className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   onChange={(e) => setImageURL(e.target.value)}
                 />
@@ -93,7 +154,7 @@ export default function Page({ params }) {
                   htmlFor="recipeSummary"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Recipe Description
+                  Recipe Description *
                 </label>
               </div>
               <div className="mt-2">
@@ -102,7 +163,6 @@ export default function Page({ params }) {
                   name="recipeSummary"
                   type="recipeSummary"
                   rows="5"
-                  required
                   className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   onChange={(e) => setRecipeSummary(e.target.value)}
                 />
@@ -110,21 +170,21 @@ export default function Page({ params }) {
             </div>
 
             <div className="flex items-center justify-between gap-6">
-              {/* Minutes to make recipe  */}
+              {/* Time to make recipe  */}
               <div>
                 <label
                   htmlFor="readyInMinutes"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Minutes to make recipe
+                  Time to make recipe
                 </label>
                 <div className="mt-2">
                   <input
                     id="readyInMinutes"
                     name="readyInMinutes"
                     type="number"
+                    placeholder="30"
                     autoComplete="readyInMinutes"
-                    required
                     className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     onChange={(e) => setReadyInMinutes(e.target.value)}
                   />
@@ -144,10 +204,30 @@ export default function Page({ params }) {
                     id="servings"
                     name="servings"
                     type="number"
-                    autoComplete="servings"
-                    required
+                    placeholder="3"
                     className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     onChange={(e) => setServings(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Price per serving */}
+              <div>
+                <label
+                  htmlFor="recipePricePerServing"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Price per serving ($)
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="recipePricePerServing"
+                    name="recipePricePerServing"
+                    type="number"
+                    step="any"
+                    placeholder="$"
+                    className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    onChange={(e) => setRecipePricePerServing(e.target.value)}
                   />
                 </div>
               </div>
@@ -159,7 +239,7 @@ export default function Page({ params }) {
                 htmlFor="instructions"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Recipe Instructions
+                Recipe Instructions *
               </label>
             </div>
             <div className="mt-2">
@@ -182,8 +262,7 @@ export default function Page({ params }) {
                   id="vegetarian"
                   value=""
                   className="hidden peer"
-                  required=""
-                  onChange={(e) => setRecipeIsVegetarian(e.target.value)}
+                  onChange={(e) => setRecipeIsVegetarian(!recipeIsVegetarian)}
                 />
                 <label
                   htmlFor="vegetarian"
@@ -204,8 +283,7 @@ export default function Page({ params }) {
                   id="vegan"
                   value=""
                   className="hidden peer"
-                  required=""
-                  onChange={(e) => setRecipeIsVegan(e.target.value)}
+                  onChange={(e) => setRecipeIsVegan(!recipeIsVegan)}
                 />
                 <label
                   htmlFor="vegan"
@@ -226,8 +304,7 @@ export default function Page({ params }) {
                   id="dairyFree"
                   value=""
                   className="hidden peer"
-                  required=""
-                  onChange={(e) => setRecipeIsDairyFree(e.target.value)}
+                  onChange={(e) => setRecipeIsDairyFree(!recipeIsDairyFree)}
                 />
                 <label
                   htmlFor="dairyFree"
@@ -248,8 +325,7 @@ export default function Page({ params }) {
                   id="glutenFree"
                   value=""
                   className="hidden peer"
-                  required=""
-                  onChange={(e) => setRecipeIsGlutenFree(e.target.value)}
+                  onChange={(e) => setRecipeIsGlutenFree(!recipeIsGlutenFree)}
                 />
                 <label
                   htmlFor="glutenFree"
@@ -264,54 +340,29 @@ export default function Page({ params }) {
               </li>
             </ul>
 
-            <div className="flex items-center justify-between gap-6">
+    
               {/* Ingredients  */}
               <div>
                 <label
                   htmlFor="Ingredients"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Ingredient 1
+                  Enter ingredients seperated by a comma
                 </label>
                 <div className="mt-2">
-                  <input
+                  <textarea
                     id="Ingredients"
                     name="Ingredients"
                     type="text"
+                    placeholder="eggs, sugar, milk"
                     autoComplete="Ingredients"
-                    required
                     className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     onChange={(e) => setIngredients(e.target.value)}
                   />
                 </div>
               </div>
 
-              {/* Number of servings */}
-              <div>
-                <label
-                  htmlFor="servings"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Number of servings
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="servings"
-                    name="servings"
-                    type="number"
-                    autoComplete="servings"
-                    required
-                    className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    onChange={(e) => setServings(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-
-
-
-
+    
             <div>
               <button
                 type="submit"

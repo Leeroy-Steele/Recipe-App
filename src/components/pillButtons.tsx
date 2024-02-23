@@ -11,7 +11,7 @@ export default function pillButtons({ name, recipe }:{name:string, recipe:object
 
   const [buttonType, setButtonType] = useState(name);
 
-  var myHeaders = new Headers();
+  const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   const handleRemoveFavourite = () => {

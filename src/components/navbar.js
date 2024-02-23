@@ -23,12 +23,7 @@ export default function Navbar() {
   const router = useRouter();
 
   // Navigation buttons on left side of nav bar
-  const [navigation, setNavigation] = useState([
-    // { name: "Categories", href: "/", current: false },
-    // { name: "Login", href: "/login", current: false },
-    // { name: "Register", href: "/register", current: false },
-    // { name: "Favourite Recipies", href: "/favourite-recipes", current: false },
-  ]);
+  const [navigation, setNavigation] = useState([]);
 
   useEffect(() => {
     if (loggedIn) {
@@ -36,6 +31,7 @@ export default function Navbar() {
         { name: "Categories", href: "/", current: false },
         { name: "Asian Category", href: "/view-category/Asian", current: false },
         { name: "Favourite Recipies", href: "/favourite-recipes",current: false,},
+        { name: "Create", href: "/create-recipe",current: false,},
       ]);
     } else {
       setNavigation([
