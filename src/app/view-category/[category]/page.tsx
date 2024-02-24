@@ -32,9 +32,7 @@ const fetcher = (url: string, apiKey: string) => {
 };
 
 export default function Home({ params }: { params: { category: string } }) {
-  // for the context
   const { userName } = useContext(MyContext);
-
   const [category, setCategory] = useState(params.category);
 
   // get recipes from spoonacular
@@ -68,8 +66,8 @@ export default function Home({ params }: { params: { category: string } }) {
 
       <div className="m-3">
         {recipeCategories.map((category) => (
-          // <div>{category.name}</div>
           <button
+            key={category.name}
             type="button"
             onClick={() => handleSetCategory(category.name)}
             className="text-black bg-white font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-grey-300 dark:hover:bg-grey-300  dark:focus:ring-blue-800"

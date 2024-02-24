@@ -1,13 +1,15 @@
-
 import { useContext, useState } from "react";
 import { MyContext } from "@/context/contextProvider";
 
-
-export default function pillButtons({ name, recipe }:{name:string, recipe:object}) {
+export default function pillButtons({
+  name,
+  recipe,
+}: {
+  name: string;
+  recipe: object;
+}) {
   // for the context
-  const {
-    userName
-  } = useContext(MyContext);
+  const { userName } = useContext(MyContext);
 
   const [buttonType, setButtonType] = useState(name);
 
@@ -35,14 +37,13 @@ export default function pillButtons({ name, recipe }:{name:string, recipe:object
   };
 
   const handleSaveToFavourite = () => {
-
     const raw = JSON.stringify({
       id: recipe.id,
       userName: userName,
       isFavourite: true,
       title: recipe.title,
       image: recipe.image,
-      Summary: recipe.summary,
+      summary: recipe.summary,
       readyInMinutes: recipe.readyInMinutes,
       servings: recipe.servings,
       sourceUrl: recipe.sourceUrl,
@@ -52,7 +53,7 @@ export default function pillButtons({ name, recipe }:{name:string, recipe:object
       glutenFree: recipe.glutenFree,
       dairyFree: recipe.dairyFree,
       pricePerServing: recipe.pricePerServing,
-      Ingredients: recipe.extendedIngredients,
+      extendedIngredients: recipe.extendedIngredients,
     });
 
     const requestOptions = {
@@ -69,8 +70,7 @@ export default function pillButtons({ name, recipe }:{name:string, recipe:object
   };
 
   return (
-    <div>
-
+    <>
       {buttonType === "Delete" ? (
         <button
           type="button"
@@ -91,7 +91,7 @@ export default function pillButtons({ name, recipe }:{name:string, recipe:object
         </button>
       ) : null}
 
-{buttonType === "Saved" ? (
+      {buttonType === "Saved" ? (
         <button
           type="button"
           style={{ backgroundColor: "blue" }}
@@ -109,6 +109,6 @@ export default function pillButtons({ name, recipe }:{name:string, recipe:object
           Deleted
         </button>
       ) : null}
-    </div>
+    </>
   );
 }

@@ -22,14 +22,21 @@ export default function Page({ params }) {
   const [recipeIsGlutenFree, setRecipeIsGlutenFree] = useState(false);
   const [recipeIsDairyFree, setRecipeIsDairyFree] = useState(false);
   const [recipePricePerServing, setRecipePricePerServing] = useState(0);
-  const [ingredients, setIngredients] = useState([]);
+  const [extendedIngredients, setIngredients] = useState('');
 
     // for page redirect
     const router = useRouter();
 
   // for when submitting the form
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
+    
+    const ingredientsArray = extendedIngredients.split(',')
+    let modifiedIngredientsArray = ingredientsArray.map((ingredient)=>{
+      console.log("is this happening")
+      return {name:ingredient}
+    })
+    console.log(modifiedIngredientsArray)
 
     //console.log the form
     console.log({
@@ -45,7 +52,7 @@ export default function Page({ params }) {
       recipeIsGlutenFree: recipeIsGlutenFree,
       recipeIsDairyFree: recipeIsDairyFree,
       recipePricePerServing: recipePricePerServing,
-      ingredients: ingredients,
+      extendedIngredients: modifiedIngredientsArray,
     });
 
     //create json for post request
@@ -55,7 +62,7 @@ export default function Page({ params }) {
       isFavourite: true,
       title: recipeTitle,
       image: imageURL,
-      Summary: recipeSummary,
+      summary: recipeSummary,
       readyInMinutes: readyInMinutes,
       servings: servings,
       sourceUrl: "user created",
@@ -65,7 +72,7 @@ export default function Page({ params }) {
       glutenFree: recipeIsGlutenFree,
       dairyFree: recipeIsDairyFree,
       pricePerServing: recipePricePerServing,
-      Ingredients: ingredients,
+      extendedIngredients: modifiedIngredientsArray,
     });
 
     const myHeaders = new Headers();
