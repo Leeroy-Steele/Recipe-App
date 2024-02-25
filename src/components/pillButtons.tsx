@@ -48,6 +48,7 @@ export default function pillButtons({
       servings: recipe.servings,
       sourceUrl: recipe.sourceUrl,
       instructions: recipe.instructions,
+      analyzedInstructions: recipe.analyzedInstructions,
       vegetarian: recipe.vegetarian,
       vegan: recipe.vegan,
       glutenFree: recipe.glutenFree,

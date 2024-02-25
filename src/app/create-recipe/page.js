@@ -1,15 +1,14 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import PillButtons from "@/components/pillButtons";
 import { MyContext } from "@/context/contextProvider";
 import { useRouter } from "next/navigation";
+import { useFieldArray, useForm } from "react-hook-form";
 
 export default function Page({ params }) {
   // for the context
   const { userName } = useContext(MyContext);
 
   //for the form
-
   const [recipeID, setRecipeID] = useState(Math.random());
   const [recipeTitle, setRecipeTitle] = useState("");
   const [imageURL, setImageURL] = useState("");
@@ -22,37 +21,25 @@ export default function Page({ params }) {
   const [recipeIsGlutenFree, setRecipeIsGlutenFree] = useState(false);
   const [recipeIsDairyFree, setRecipeIsDairyFree] = useState(false);
   const [recipePricePerServing, setRecipePricePerServing] = useState(0);
-  const [extendedIngredients, setIngredients] = useState('');
+  const [extendedIngredients, setIngredients] = useState("");
 
-    // for page redirect
-    const router = useRouter();
+  //for dynamic form (for instructions inputs)
+  const { register, handleSubmit, control } = useForm({
+    defaultValues: {
+      test: [{}],
+    },
+  });
+  const { fields, append, remove } = useFieldArray({ control, name: "test" });
+
+  // for page redirect
+  const router = useRouter();
 
   // for when submitting the form
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    
-    const ingredientsArray = extendedIngredients.split(',')
-    let modifiedIngredientsArray = ingredientsArray.map((ingredient)=>{
-      console.log("is this happening")
-      return {name:ingredient}
-    })
-    console.log(modifiedIngredientsArray)
+  const onFormSubmit = (recipeInstructions) => {
 
-    //console.log the form
-    console.log({
-      recipeID: recipeID,
-      recipeTitle: recipeTitle,
-      imageURL: imageURL,
-      recipeSummary: recipeSummary,
-      readyInMinutes: readyInMinutes,
-      servings: servings,
-      instructions: instructions,
-      recipeIsVegetarian: recipeIsVegetarian,
-      recipeIsVegan: recipeIsVegan,
-      recipeIsGlutenFree: recipeIsGlutenFree,
-      recipeIsDairyFree: recipeIsDairyFree,
-      recipePricePerServing: recipePricePerServing,
-      extendedIngredients: modifiedIngredientsArray,
+    const ingredientsArray = extendedIngredients.split(",");
+    let modifiedIngredientsArray = ingredientsArray.map((ingredient) => {
+      return { name: ingredient };
     });
 
     //create json for post request
@@ -66,7 +53,9 @@ export default function Page({ params }) {
       readyInMinutes: readyInMinutes,
       servings: servings,
       sourceUrl: "user created",
-      instructions: instructions,
+      analyzedInstructions: [{steps:recipeInstructions.test.map((instr, index)=>{
+        return {step:instr.value, number:index+1}
+      })}],
       vegetarian: recipeIsVegetarian,
       vegan: recipeIsVegan,
       glutenFree: recipeIsGlutenFree,
@@ -84,17 +73,17 @@ export default function Page({ params }) {
       body: raw,
       redirect: "follow",
     };
-    
+
     //post recipe to backend
     fetch("/api/favourite-recipes", requestOptions)
       .then((response) => response.text())
       .then((result) => {
         //redirect to my recipes
-        router.push('/favourite-recipes')
+        router.push("/favourite-recipes");
       })
       .catch((error) => console.log("error", error));
-
   };
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -111,7 +100,7 @@ export default function Page({ params }) {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit(onFormSubmit)}>
             {/* title */}
             <div>
               <label
@@ -133,6 +122,151 @@ export default function Page({ params }) {
               </div>
             </div>
 
+            <ul className="grid w-full gap-6 grid-cols-2">
+              {/* is vegetarian */}
+              <li>
+                <input
+                  type="checkbox"
+                  id="vegetarian"
+                  value=""
+                  className="hidden peer"
+                  onChange={(e) => setRecipeIsVegetarian(!recipeIsVegetarian)}
+                />
+                <label
+                  htmlFor="vegetarian"
+                  className="inline-flex items-center w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-green-300 peer-checked:text-green-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                >
+                  <div className="block">
+                    <div className="w-full text-lg font-semibold">
+                      <p className="text-right">Vegetarian</p>
+                    </div>
+                  </div>
+                </label>
+              </li>
+
+              {/* is vegan */}
+              <li>
+                <input
+                  type="checkbox"
+                  id="vegan"
+                  value=""
+                  className="hidden peer"
+                  onChange={(e) => setRecipeIsVegan(!recipeIsVegan)}
+                />
+                <label
+                  htmlFor="vegan"
+                  className="inline-flex items-center w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-green-300 peer-checked:text-green-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                >
+                  <div className="block">
+                    <div className="w-full text-lg font-semibold">
+                      <p className="text-right">Vegan</p>
+                    </div>
+                  </div>
+                </label>
+              </li>
+
+              {/* is dairy free */}
+              <li>
+                <input
+                  type="checkbox"
+                  id="dairyFree"
+                  value=""
+                  className="hidden peer"
+                  onChange={(e) => setRecipeIsDairyFree(!recipeIsDairyFree)}
+                />
+                <label
+                  htmlFor="dairyFree"
+                  className="inline-flex items-center w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-green-300 peer-checked:text-green-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                >
+                  <div className="block">
+                    <div className="w-full text-lg font-semibold">
+                      <p className="text-right">Dairy Free</p>
+                    </div>
+                  </div>
+                </label>
+              </li>
+
+              {/* is gluten free */}
+              <li>
+                <input
+                  type="checkbox"
+                  id="glutenFree"
+                  value=""
+                  className="hidden peer"
+                  onChange={(e) => setRecipeIsGlutenFree(!recipeIsGlutenFree)}
+                />
+                <label
+                  htmlFor="glutenFree"
+                  className="inline-flex items-center w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-green-300 peer-checked:text-green-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                >
+                  <div className="block">
+                    <div className="w-full text-lg font-semibold">
+                      <p className="text-right">Gluten Free</p>
+                    </div>
+                  </div>
+                </label>
+              </li>
+            </ul>
+
+            {/* New Recipe Instructions */}
+            <div>
+              <h2 className="mt-10 text-center text-xl leading-9 tracking-tight text-gray-900">
+                Recipe Steps
+              </h2>
+              <button
+                className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow m-auto w-100"
+                onClick={() => append({ value: "" })}
+                type="button"
+              >
+                Add Step
+              </button>
+              {fields.map(({ id }, index) => {
+                return (
+                  <div key={id}>
+                    <div>
+                      <div className="mt-2">
+                        <textarea
+                          id="steps"
+                          name="steps"
+                          type="text"
+                          className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          {...register(`test.${index}.value`)}
+                        />
+                        <button
+                          className="bg-white hover:bg-gray-100 text-red-800 font-semibold py-1 px-4 "
+                          onClick={() => remove(index)}
+                        >
+                          {`Remove Step ${index + 1}`}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Old Recipe Instructions */}
+            {/* <div key={num}>
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor={`Step ${num}`}
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Step {num}
+                </label>
+              </div>
+              <div className="mt-2">
+                <textarea
+                  id={`Step ${num}`}
+                  name={`Step ${num}`}
+                  type={`Step ${num}`}
+                  rows="2"
+                  className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  onChange={(e) => setRecipeSummary(e.target.value)}
+                />
+              </div>
+            </div> */}
+
             {/* Image URL */}
             <div>
               <label
@@ -150,6 +284,27 @@ export default function Page({ params }) {
                   autoComplete="imageURL"
                   className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   onChange={(e) => setImageURL(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Ingredients  */}
+            <div>
+              <label
+                htmlFor="Ingredients"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Enter ingredients seperated by a comma
+              </label>
+              <div className="mt-2">
+                <textarea
+                  id="Ingredients"
+                  name="Ingredients"
+                  type="text"
+                  placeholder="eggs, sugar, milk"
+                  autoComplete="Ingredients"
+                  className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  onChange={(e) => setIngredients(e.target.value)}
                 />
               </div>
             </div>
@@ -240,136 +395,6 @@ export default function Page({ params }) {
               </div>
             </div>
 
-            {/* Recipe Instructions */}
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="instructions"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Recipe Instructions *
-              </label>
-            </div>
-            <div className="mt-2">
-              <textarea
-                id="instructions"
-                name="instructions"
-                type="text"
-                rows="15"
-                required
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                onChange={(e) => setInstructions(e.target.value)}
-              />
-            </div>
-
-            <ul className="grid w-full gap-6 grid-cols-2">
-              {/* is vegetarian */}
-              <li>
-                <input
-                  type="checkbox"
-                  id="vegetarian"
-                  value=""
-                  className="hidden peer"
-                  onChange={(e) => setRecipeIsVegetarian(!recipeIsVegetarian)}
-                />
-                <label
-                  htmlFor="vegetarian"
-                  className="inline-flex items-center w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-green-300 peer-checked:text-green-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-                >
-                  <div className="block">
-                    <div className="w-full text-lg font-semibold">
-                      <p className="text-right">Vegetarian</p>
-                    </div>
-                  </div>
-                </label>
-              </li>
-
-              {/* is vegan */}
-              <li>
-                <input
-                  type="checkbox"
-                  id="vegan"
-                  value=""
-                  className="hidden peer"
-                  onChange={(e) => setRecipeIsVegan(!recipeIsVegan)}
-                />
-                <label
-                  htmlFor="vegan"
-                  className="inline-flex items-center w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-green-300 peer-checked:text-green-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-                >
-                  <div className="block">
-                    <div className="w-full text-lg font-semibold">
-                      <p className="text-right">Vegan</p>
-                    </div>
-                  </div>
-                </label>
-              </li>
-
-              {/* is dairy free */}
-              <li>
-                <input
-                  type="checkbox"
-                  id="dairyFree"
-                  value=""
-                  className="hidden peer"
-                  onChange={(e) => setRecipeIsDairyFree(!recipeIsDairyFree)}
-                />
-                <label
-                  htmlFor="dairyFree"
-                  className="inline-flex items-center w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-green-300 peer-checked:text-green-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-                >
-                  <div className="block">
-                    <div className="w-full text-lg font-semibold">
-                      <p className="text-right">Dairy Free</p>
-                    </div>
-                  </div>
-                </label>
-              </li>
-
-              {/* is gluten free */}
-              <li>
-                <input
-                  type="checkbox"
-                  id="glutenFree"
-                  value=""
-                  className="hidden peer"
-                  onChange={(e) => setRecipeIsGlutenFree(!recipeIsGlutenFree)}
-                />
-                <label
-                  htmlFor="glutenFree"
-                  className="inline-flex items-center w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-green-300 peer-checked:text-green-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-                >
-                  <div className="block">
-                    <div className="w-full text-lg font-semibold">
-                      <p className="text-right">Gluten Free</p>
-                    </div>
-                  </div>
-                </label>
-              </li>
-            </ul>
-
-    
-              {/* Ingredients  */}
-              <div>
-                <label
-                  htmlFor="Ingredients"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Enter ingredients seperated by a comma
-                </label>
-                <div className="mt-2">
-                  <textarea
-                    id="Ingredients"
-                    name="Ingredients"
-                    type="text"
-                    placeholder="eggs, sugar, milk"
-                    autoComplete="Ingredients"
-                    className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    onChange={(e) => setIngredients(e.target.value)}
-                  />
-                </div>
-              </div>
-
-    
             <div>
               <button
                 type="submit"

@@ -53,7 +53,7 @@ export default function Page({ params }) {
   }, []);
 
   return (
-    <div className="relative isolate overflow-hidden px-24 py-2">
+    <div style={{ maxWidth: "1500px" }} className="relative isolate overflow-hidden px-8 py-2 m-auto">
       {typeof displayData == "object" && displayData.length != 0 && (
         <div>
           <br></br>
@@ -98,11 +98,21 @@ export default function Page({ params }) {
           </div>
 
           {/* Cooking instructions */}
-          <div className="px-4 py-6 m-auto" style={{ maxWidth: "1500px" }}>
-            <dd
-              className="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0 mb-6"
-              dangerouslySetInnerHTML={{ __html: displayData.instructions }}
-            ></dd>
+          <div className=" py-6 m-auto" >
+            {displayData.analyzedInstructions ? (
+              displayData.analyzedInstructions[0].steps.map((instruction) => {
+                return (
+                  <dd key={instruction.number} className="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0 mb-6">
+                    <b>{`Step ${instruction.number}`}</b><br></br>{instruction.step}
+                  </dd>
+                );
+              })
+            ) : (
+              <dd
+                className="mt-1 text-lg leading-6 text-gray-700 sm:col-span-2 sm:mt-0 mb-6"
+                dangerouslySetInnerHTML={{ __html: displayData.instructions }}
+              ></dd>
+            )}
           </div>
 
           {/* recipe image */}
@@ -113,7 +123,7 @@ export default function Page({ params }) {
           />
 
           {/* ingredients */}
-          <div className="px-4 py-6 md:grid sm:grid-cols-4 md:grid-cols-6 sm:gap-4 sm:px-0">
+          <div className="py-6 md:grid sm:grid-cols-4 md:grid-cols-6 sm:gap-4 sm:px-0">
             <dt className="text-sm font-medium leading-6 text-gray-900">
               Ingredients
             </dt>
