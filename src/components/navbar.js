@@ -28,12 +28,15 @@ export default function Navbar() {
   useEffect(() => {
     if (loggedIn) {
       setNavigation([
+        { name: "Search", href:"/search-by-ingredients/Bread", current:false},
         { name: "Categories", href: "/", current: false },
         { name: "Favourites", href: "/favourite-recipes",current: false,},
         { name: "Create", href: "/create-recipe",current: false,},
+
       ]);
     } else {
       setNavigation([
+        { name: "Search", href:"/search-by-ingredients/Bread", current:false},
         { name: "Categories", href: "/", current: false },
         { name: "Login", href: "/login", current: false },
         { name: "Register", href: "/register", current: false },
