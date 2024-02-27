@@ -6,30 +6,22 @@ import Card from "@/components/card";
 
 export default function FavouriteRecipesPage() {
   // for the context
-  const {
-    userName,
-    updateUserName,
-    userEmail,
-    updateEmail,
-    loggedIn,
-    updateLoggedIn,
-  } = useContext(MyContext);
-
-  const requestOptions = {
-    method: "GET",
-    redirect: "follow",
-  };
-
+  const {userName} = useContext(MyContext);
   const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
+
     fetch(`/api/favourite-recipes?userName=${userName}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setRecipes(result);
       })
       .catch((error) => console.log("error", error));
-  }, []);
+  }, [userName]);
 
   return (
     <>

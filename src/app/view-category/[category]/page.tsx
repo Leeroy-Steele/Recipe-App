@@ -1,10 +1,9 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
-import { MyContext } from "@/context/contextProvider";
+import { useState } from "react";
 import HeaderSection from "@/components/headerSection";
 import Card from "@/components/card";
-import Pagenation from "@/components/pagenation";
+// import Pagenation from "@/components/pagenation";
 import useSWR from "swr";
 import axios from "axios";
 import { recipeCategories } from "@/context/recipeCategories";
@@ -32,7 +31,6 @@ const fetcher = (url: string, apiKey: string) => {
 };
 
 export default function Home({ params }: { params: { category: string } }) {
-  const { userName } = useContext(MyContext);
   const [category, setCategory] = useState(params.category);
 
   // get recipes from spoonacular

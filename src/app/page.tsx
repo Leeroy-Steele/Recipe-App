@@ -1,7 +1,5 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
-import { MyContext } from "@/context/contextProvider";
 import Link from "next/link";
 
 import { recipeCategories } from "@/context/recipeCategories";

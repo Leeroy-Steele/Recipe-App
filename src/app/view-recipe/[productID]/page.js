@@ -50,7 +50,7 @@ export default function Page({ params }) {
             .catch((error) => console.log("error", error));
         }
       });
-  }, []);
+  }, [userName, params.productID]);
 
   return (
     <div style={{ maxWidth: "1500px" }} className="relative isolate overflow-hidden px-8 py-2 m-auto">
