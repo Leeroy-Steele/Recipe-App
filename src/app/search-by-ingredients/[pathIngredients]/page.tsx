@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import HeaderSection from "@/components/HeaderSection";
+import HeaderSection from "@/components/headerSection";
 import Card from "@/components/card";
 import useSWR from "swr";
 import axios from "axios";

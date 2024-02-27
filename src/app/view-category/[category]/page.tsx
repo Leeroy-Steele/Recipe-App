@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useState } from "react";
 import { MyContext } from "@/context/contextProvider";
-import HeaderSection from "@/components/HeaderSection";
+import HeaderSection from "@/components/headerSection";
 import Card from "@/components/card";
 import Pagenation from "@/components/pagenation";
 import useSWR from "swr";
