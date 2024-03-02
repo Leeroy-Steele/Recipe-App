@@ -57,7 +57,7 @@ export default function PillButtons({
       dairyFree: recipe.dairyFree,
       pricePerServing: recipe.pricePerServing,
       extendedIngredients: recipe.extendedIngredients,
-    });
+    })
 
     const requestOptions = {
       method: "POST",
