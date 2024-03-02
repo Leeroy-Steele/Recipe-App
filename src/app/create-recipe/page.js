@@ -286,12 +286,6 @@ export default function Page({ params }) {
             {/* Recipe Description */}
             <div className="mb-6">
               <div className="text-center">
-                {/* <label
-                  htmlFor="recipeSummary"
-                  className="block text-sm font-medium leading-6 text-gray-900 "
-                >
-                  Recipe Description *
-                </label> */}
                 <h3 className="mt-10 text-center text-xl leading-9 tracking-tight text-gray-900">
                   Enter ingredients seperated by a comma
               </h3>
