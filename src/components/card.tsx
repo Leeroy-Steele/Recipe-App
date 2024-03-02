@@ -1,5 +1,5 @@
 "use client";
-import PillButtons from "./SaveDeleteButtons";
+import PillButtons from "./pillButtons";
 import Link from "next/link";
 
 export default function Card({ product }: any) {

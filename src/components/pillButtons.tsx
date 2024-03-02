@@ -3,7 +3,7 @@
 import { useContext, useState } from "react";
 import { MyContext } from "@/context/contextProvider";
 
-export default function SaveDeleteButtons({
+export default function PillButtons({
   name,
   recipe,
 }: {
