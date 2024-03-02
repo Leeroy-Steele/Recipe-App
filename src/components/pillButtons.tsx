@@ -8,7 +8,7 @@ export default function pillButtons({
   recipe,
 }: {
   name: string;
-  recipe: object;
+  recipe: any;
 }) {
   // for the context
   const { userName } = useContext(MyContext);
@@ -27,7 +27,7 @@ export default function pillButtons({
       method: "DELETE",
       headers: myHeaders,
       body: raw,
-      redirect: "follow",
+      // redirect: "follow",
     };
 
     fetch("/api/favourite-recipes", requestOptions)
@@ -63,7 +63,7 @@ export default function pillButtons({
       method: "POST",
       headers: myHeaders,
       body: raw,
-      redirect: "follow",
+      // redirect: "follow",
     };
 
     fetch("/api/favourite-recipes", requestOptions)

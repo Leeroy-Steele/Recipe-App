@@ -1,23 +1,23 @@
 "use client";
 
-import { useFieldArray, useForm } from "react-hook-form";
+// import { useFieldArray, useForm } from "react-hook-form";
 
 // https://www.youtube.com/watch?v=FxKiuNUfTZg&ab_channel=TheBraveCoders
 export default function Testing() {
-  const { register, handleSubmit, control } = useForm({
-    defaultValues: {
-      test: [{}],
-    },
-  });
-  const { fields, append, remove } = useFieldArray({ control, name: "test" });
+  // const { register, handleSubmit, control } = useForm({
+  //   defaultValues: {
+  //     test: [{}],
+  //   },
+  // });
+  // const { fields, append, remove } = useFieldArray({ control, name: "test" });
 
-  const onFormSubmit = (data) => {
-    console.log(data);
-  };
+  // const onFormSubmit = (data) => {
+  //   console.log(data);
+  // };
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onFormSubmit)}>
+      {/* <form onSubmit={handleSubmit(onFormSubmit)}>
         <button onClick={() => append({ value: "" })}>New Input</button>
         <div>
           {fields.map(({ id }, index) => {
@@ -33,7 +33,7 @@ export default function Testing() {
           })}
         </div>
         <button type="submit">Submit</button>
-      </form>
+      </form> */}
     </div>
   );
 }

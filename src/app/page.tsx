@@ -17,7 +17,7 @@ export default function Home() {
       <section className="bg-white  py-24 px-4 lg:px-16">
         <div className="container mx-auto px-[12px] md:px-24 xl:px-12  nanum2">
           <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-5 gap-x-4 gap-y-28 lg:gap-y-16">
-            {recipeCategories.map((cat: object) => (
+            {recipeCategories.map((cat: any) => (
               <div key={cat.name} className="relative group h-48 flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
                 <Link href={`/view-category/${cat.name}`} className="block">
                   <div className="h-28">

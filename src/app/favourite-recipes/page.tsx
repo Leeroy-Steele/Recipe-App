@@ -12,7 +12,7 @@ export default function FavouriteRecipesPage() {
   useEffect(() => {
     const requestOptions = {
       method: "GET",
-      redirect: "follow",
+      // redirect: "follow",
     };
 
     fetch(`/api/favourite-recipes?userName=${userName}`, requestOptions)
@@ -42,7 +42,7 @@ export default function FavouriteRecipesPage() {
         style={{maxWidth:"1500px"}}
         className="mx-auto p-5 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
         {recipes &&
-          recipes.map((recipe) => (
+          recipes.map((recipe:any) => (
             <Card key={recipe.id} product={recipe}></Card>
           ))}
       </div>
