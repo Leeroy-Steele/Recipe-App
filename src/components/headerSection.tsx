@@ -1,7 +1,7 @@
 "use client";
 import backgroundImage from "../../public/images/1.jpg"
 
-export default function HeaderSection({title,smallText}) {
+export default function HeaderSection({title,smallText}:any) {
   return (
     <>
       <div 
