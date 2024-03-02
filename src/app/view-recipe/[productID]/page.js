@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import PillButtons from "@/components/PillButtons";
+import PillButtons from "@/components/SaveDeleteButtons";
 
 import { MyContext } from "@/context/contextProvider";
 
