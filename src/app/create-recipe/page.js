@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { MyContext } from "@/context/contextProvider";
 import { useRouter } from "next/navigation";
 import { useFieldArray, useForm } from "react-hook-form";
+import HeaderSection from "@/components/headerSection";
 
 export default function Page({ params }) {
   // for the context
@@ -88,23 +89,27 @@ export default function Page({ params }) {
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      {/* Top image */}
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          className="mx-auto h-25 w-auto"
-          src="https://www.eatingwell.com/thmb/m5xUzIOmhWSoXZnY-oZcO9SdArQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/article_291139_the-top-10-healthiest-foods-for-kids_-02-4b745e57928c4786a61b47d8ba920058.jpg"
-          alt="Logo"
-        />
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Create your own recipe here
-        </h2>
+      <HeaderSection
+        title={`Create your own recipe here`}
+        smallText={``}
+      />
+
+      {/* Save Button */}
+      <div className="mt-5 flex flex-col items-center">
+        <button
+          type="button"
+          onClick={handleSubmit(onFormSubmit)}
+          className="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800"
+        >
+          Save Recipe
+        </button>
       </div>
 
       {/* Form Div */}
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm lg:max-w-7xl">
         <form
           className="space-y-6 grid gap-10 lg:grid-cols-2"
-          onSubmit={handleSubmit(onFormSubmit)}
+          // onSubmit={handleSubmit(onFormSubmit)}
         >
           {/* Big screen - Left Side */}
           <div>
@@ -381,15 +386,6 @@ export default function Page({ params }) {
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="justify-center">
-              <button
-                type="submit"
-                className="max-w-xs rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Save Recipe
-              </button>
             </div>
           </div>
         </form>
