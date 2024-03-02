@@ -40,7 +40,7 @@ export default function LoginPage() {
       method: "POST",
       headers: myHeaders,
       body: raw,
-      redirect: "follow",
+      // redirect: "follow",
     };
 
     fetch("/api/sign-up", requestOptions)

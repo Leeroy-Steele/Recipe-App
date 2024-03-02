@@ -1,8 +1,7 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
 // import PillButtons from "@/components/pillButtons";
-import PillButtons from "../../../components/pillButtons";
-
+import PillButtons from "@/components/pillButtons";
 import { MyContext } from "@/context/contextProvider";
 
 export default function Page({ params }) {
