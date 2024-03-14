@@ -10,8 +10,7 @@ export async function POST(request) {
 
   //check user email exists in DB first
   const dbRequest = await db.collection("Users").findOne({ email: email });
-  //testing
-  console.log("email is "+email+ " password is " + password)
+  
   //
   if (dbRequest == null) {
     return NextResponse.json({

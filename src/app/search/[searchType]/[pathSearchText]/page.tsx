@@ -6,6 +6,7 @@ import Card from "@/components/card";
 import useSWR from "swr";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import backgroundImage from "@/../../public/images/1.jpg";
 
 // fetcher for swr
 const fetcher = (url: string, apiKey: string) => {
@@ -40,16 +41,10 @@ export default function SearchByIngredients({
 
   // get recipes from spoonacular
   const { data, error, isLoading } = useSWR(
-    searchType
-      ? [
-          `https://api.spoonacular.com/recipes/complexSearch?titleMatch=${searchText}`,
-          "1cdfdd18388841c5b48f2d282e84dc00",
-        ]
-      : [
-          `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${searchText}&number=20`,
-          "1cdfdd18388841c5b48f2d282e84dc00",
-        ],
-    ([url, apiKey]) => fetcher(url, apiKey)
+    searchType === "recipe"
+      ? `https://api.spoonacular.com/recipes/complexSearch?titleMatch=${searchText}`
+      : `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${searchText}&number=20`,
+    (url: string) => fetcher(url, "1cdfdd18388841c5b48f2d282e84dc00")
   );
 
   // isLoading?null:console.log(data.results);
@@ -72,62 +67,46 @@ export default function SearchByIngredients({
 
   return (
     <>
-      <HeaderSection
-        title={searchType==="recipe"?`Search for recipes`:`Search for recipes by ingredients`}
-        // smallText={`Showing results for: ${searchText.replaceAll(
-        //   "%2C%2B",
-        //   ", "
-        // )}`}
-      />
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage.src})`,
+          width: "100%",
+          // height: '200px',
+        }}
+        className="relative isolate overflow-hidden py-24 sm:py-32"
+      >
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <h2 className="text-4xl font-bold tracking-tight text-white sm:text-6xl text-center">
+            {searchType === "recipe"
+              ? `Search for recipes`
+              : `Search for recipes by ingredients`}
+          </h2>
+
+          {/* Search Type Button */}
+          <div className="mt-6 flex justify-center">
+          <button
+            onClick={() => handleSearchTypeChange("recipe")}
+            type="button"
+            className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          >
+            Search by Recipe
+          </button>
+          <button
+            onClick={() => handleSearchTypeChange("ingredients")}
+            type="button"
+            className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          >
+            Search by Ingredients
+          </button>
+          </div>
+
+        </div>
+      </div>
 
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 py-6 sm:py-8 lg:max-w-7xl lg:px-8">
-          {/* Search Type Button */}
-          <ul>
-          <li>
-          <div className="mx-auto max-w-xs">
-            <input
-              type="checkbox"
-              id="searchTypeButton1"
-              className="hidden peer"
-              onClick={() => handleSearchTypeChange("recipe")}
-            />
-            <label
-              htmlFor="searchTypeButton1"
-              className="inline-flex items-center w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-green-300 peer-checked:text-green-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-            >
-              <div className="block">
-                <div className="w-full text-lg font-semibold">
-                  <p className="text-right">Search by Recipe</p>
-                </div>
-              </div>
-            </label>
-          </div>
-          </li>
-          <li>
-          <div className="mx-auto max-w-xs">
-            <input
-              type="checkbox"
-              id="searchTypeButton2"
-              className="hidden peer"
-              onClick={() => handleSearchTypeChange("ingredients")}
-            />
-            <label
-              htmlFor="searchTypeButton2"
-              className="inline-flex items-center w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-green-300 peer-checked:text-green-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-            >
-              <div className="block">
-                <div className="w-full text-lg font-semibold">
-                  <p className="text-right">Search by Ingredients</p>
-                </div>
-              </div>
-            </label>
-          </div>
-          </li>
-          </ul>
-
           {/* Search Text Input */}
-          {searchType ? (
+          {searchType === "recipe" ? (
             <form
               onSubmit={handleRecipeChange}
               className="mx-auto max-w-xl pt-2 pb-8"
@@ -214,20 +193,20 @@ export default function SearchByIngredients({
           )}
 
           {/* Recipe Cards go here */}
-          <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8"> */}
+          <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
             {!isLoading &&
               !error &&
-              searchType === "recipe"?
-                data.results.map((product: any) => (
-                  <Card key={product.id} product={product}></Card>
-                ))
-              :
-              // null
-                data.map((product: any) => (
-                  <Card key={product.id} product={product}></Card>
-                ))
-           
-              }
+              searchType === "recipe" &&
+              data.results.map((product: any) => (
+                <Card key={product.id} product={product}></Card>
+              ))}
+
+            {!isLoading &&
+              !error &&
+              searchType === "ingredients" &&
+              data.map((product: any) => (
+                <Card key={product.id} product={product}></Card>
+              ))}
           </div>
         </div>
       </div>

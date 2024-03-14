@@ -9,7 +9,7 @@ import axios from "axios";
 import { recipeCategories } from "@/context/recipeCategories";
 
 // fetcher for swr
-const fetcher = (url: string, apiKey: string) => {
+const fetcher = (url: string, apiKey: any) => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
@@ -35,11 +35,8 @@ export default function Home({ params }: { params: { category: string } }) {
 
   // get recipes from spoonacular
   const { data, error, isLoading } = useSWR(
-    [
       `https://api.spoonacular.com/recipes/complexSearch?offset=${1}&number=${100}&cuisine=${category}`,
-      "1cdfdd18388841c5b48f2d282e84dc00",
-    ],
-    ([url, apiKey]) => fetcher(url, apiKey)
+    (url) => fetcher(url, "1cdfdd18388841c5b48f2d282e84dc00")
   );
 
   const handleSetCategory = (category: string) => {
