@@ -5,6 +5,7 @@ import Link from "next/link";
 import { recipeCategories } from "@/context/recipeCategories";
 import HeaderSection from "@/components/headerSection";
 
+
 export default function Home() {
 
   return (
